@@ -25,13 +25,15 @@ abstract class PageLoader<T>(
 					val current = it.current
 					val pages = it.pages
 					val records = it.records
-					if (records != null) {
-						adapter.addList(records)
-					}
-					val status = if (pages == current) {
+					var status = if (pages == current) {
 						LoaderStatus.NOT_MORE
 					} else {
 						LoaderStatus.LOAD_MORE
+					}
+					if (records != null) {
+						adapter.addList(records)
+					} else {
+						status = LoaderStatus.NOT_DATA
 					}
 					adapter.setStatus(status)
 					adapter.applyChange()
