@@ -30,7 +30,7 @@ abstract class PageLoader<T>(
 					} else {
 						LoaderStatus.LOAD_MORE
 					}
-					if (records != null) {
+					if (records != null && records.isNotEmpty()) {
 						adapter.addList(records)
 					} else {
 						status = LoaderStatus.NOT_DATA
