@@ -33,7 +33,6 @@ abstract class PageLoader<T>(
 				call: Call<PageResponse<T>>,
 				response: Response<PageResponse<T>>
 			) {
-				mSuccessListener?.success(response.body())
 				response.body()?.page?.also {
 					adapter.addPage()
 					val current = it.current
@@ -52,6 +51,7 @@ abstract class PageLoader<T>(
 					adapter.setStatus(status)
 					adapter.applyChange()
 				}
+				mSuccessListener?.success(response.body())
 			}
 
 			override fun onFailure(call: Call<PageResponse<T>>, t: Throwable) {
