@@ -1,6 +1,8 @@
 package com.ynqxg.loaderRecyclerView
 
 import android.util.Log
+import com.ynqxg.loaderRecyclerView.listener.FailureListener
+import com.ynqxg.loaderRecyclerView.listener.SuccessListener
 import com.ynqxg.loaderRecyclerView.model.PageResponse
 import okhttp3.MediaType
 import okhttp3.RequestBody
@@ -12,14 +14,26 @@ abstract class PageLoader<T>(
 	private val adapter: LoaderAdapter<T, *>
 ) {
 
-    abstract fun getRequest(): Call<PageResponse<T>>
+	private var mSuccessListener: SuccessListener<T>? = null
+	private var mFailureListener: FailureListener? = null
 
-    fun load() {
-        getRequest().enqueue(object : Callback<PageResponse<T>> {
+	abstract fun getRequest(): Call<PageResponse<T>>
+
+	fun setSuccessListener(listener: SuccessListener<T>) {
+		mSuccessListener = listener
+	}
+
+	fun setFailureListener(listener: FailureListener) {
+		mFailureListener = listener
+	}
+
+	fun load() {
+		getRequest().enqueue(object : Callback<PageResponse<T>> {
 			override fun onResponse(
 				call: Call<PageResponse<T>>,
 				response: Response<PageResponse<T>>
 			) {
+				mSuccessListener?.success(response.body())
 				response.body()?.page?.also {
 					adapter.addPage()
 					val current = it.current
@@ -43,6 +57,7 @@ abstract class PageLoader<T>(
 			override fun onFailure(call: Call<PageResponse<T>>, t: Throwable) {
 				Log.e("TAG", "onFailure: ${t.message}", t)
 				adapter.setStatus(LoaderStatus.LOAD_FAIL)
+				mFailureListener?.failure(t)
 			}
 
 		})
