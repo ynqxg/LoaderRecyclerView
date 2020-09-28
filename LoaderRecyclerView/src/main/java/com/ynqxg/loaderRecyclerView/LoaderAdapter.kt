@@ -43,7 +43,7 @@ abstract class LoaderAdapter<M, VH : LoaderViewHolder> :
             it.setMargins(0, margin, 0, margin)
         }
         tv.textSize = 16f
-        tv.setTextColor(Color.parseColor("#333333"))
+        tv.setTextColor(Color.parseColor("#666666"))
         tv.paint.isFakeBoldText = true
         tv.setPadding(0, padding, 0, padding)
         tv.gravity = Gravity.CENTER
