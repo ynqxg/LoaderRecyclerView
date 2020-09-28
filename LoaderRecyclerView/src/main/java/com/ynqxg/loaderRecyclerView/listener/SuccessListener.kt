@@ -2,9 +2,8 @@ package com.ynqxg.loaderRecyclerView.listener
 
 import com.ynqxg.loaderRecyclerView.model.PageResponse
 
-interface SuccessListener<T> {
+abstract class SuccessListener<T> {
 
-    fun success(response: PageResponse<T>?)
+    abstract fun success(response: PageResponse<T>?)
 
-    fun success(response: ((PageResponse<T>) -> Unit)?)
 }
