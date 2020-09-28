@@ -33,11 +33,12 @@ abstract class PageLoader<T>(
 				call: Call<PageResponse<T>>,
 				response: Response<PageResponse<T>>
 			) {
-				response.body()?.page?.also {
+				if (response.body()?.page != null) {
+					val page = response.body()?.page
 					adapter.addPage()
-					val current = it.current
-					val pages = it.pages
-					val records = it.records
+					val current = page?.current
+					val pages = page?.pages
+					val records = page?.records
 					var status = if (pages == current) {
 						LoaderStatus.NOT_MORE
 					} else {
@@ -49,6 +50,9 @@ abstract class PageLoader<T>(
 						status = LoaderStatus.NOT_DATA
 					}
 					adapter.setStatus(status)
+					adapter.applyChange()
+				} else {
+					adapter.setStatus(LoaderStatus.NOT_DATA)
 					adapter.applyChange()
 				}
 				mSuccessListener?.success(response.body())
